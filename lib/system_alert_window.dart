@@ -106,7 +106,7 @@ class SystemAlertWindow {
   /// `prefMode` Preference for the system window. Default is [SystemWindowPrefMode.DEFAULT]
   /// `backgroundColor` Background color for the system window. Default is [Colors.white]. This will be the default background color for header, body, footer
   /// `isDisableClicks` Disables the clicks across the system window. Default is false. This is not applicable for bubbles.
-  static Future<bool?> showSystemWindow(
+  static Future<bool?> showSystemWindowCopy(
       {required SystemWindowHeader header,
       SystemWindowBody? body,
       SystemWindowFooter? footer,
