@@ -177,7 +177,7 @@ class _MyAppState extends State<MyApp> {
               SystemWindowPadding(left: 16, right: 16, bottom: 12, top: 10),
           decoration: SystemWindowDecoration(startColor: Colors.white),
           buttonsPosition: ButtonPosition.CENTER);
-      SystemAlertWindow.showSystemWindow(
+      SystemAlertWindow.showSystemWindowCopy(
           height: 230,
           header: header,
           body: body,
