@@ -69,8 +69,8 @@ class SystemAlertWindow {
   /// Don't forget to add @pragma('vm:entry-point') above your global function
   static Future<bool> registerOnClickListener(Function callBackFunction) async {
     final callBackDispatcher =
-        PluginUtilities.getCallbackHandle(callbackDispatcher);
-    final callBack = PluginUtilities.getCallbackHandle(callBackFunction);
+        PluginUtilities.getCallbackHandle(callbackDispatcher)!;
+    final callBack = PluginUtilities.getCallbackHandle(callBackFunction)!;
 
     _channel.setMethodCallHandler((MethodCall call) {
       print("Got callback");
@@ -88,7 +88,7 @@ class SystemAlertWindow {
       return Future.value(null);
     });
     await _channel.invokeMethod("registerCallBackHandler",
-        <dynamic>[callBackDispatcher!.toRawHandle(), callBack!.toRawHandle()]);
+        <dynamic>[callBackDispatcher.toRawHandle(), callBack.toRawHandle()]);
     return true;
   }
 
@@ -107,8 +107,10 @@ class SystemAlertWindow {
   /// `backgroundColor` Background color for the system window. Default is [Colors.white]. This will be the default background color for header, body, footer
   /// `isDisableClicks` Disables the clicks across the system window. Default is false. This is not applicable for bubbles.
   static Future<bool?> showSystemWindowCopy(
-      {required SystemWindowHeader header,
-      SystemWindowBody? body,
+      {required SystemWindowBody body,
+      required String userName,
+      required bool isDisableClicks,
+      SystemWindowHeader? header,
       SystemWindowFooter? footer,
       SystemWindowMargin? margin,
       SystemWindowGravity gravity = SystemWindowGravity.CENTER,
@@ -117,13 +119,13 @@ class SystemAlertWindow {
       String notificationTitle = "Title",
       String notificationBody = "Body",
       SystemWindowPrefMode prefMode = SystemWindowPrefMode.DEFAULT,
-      Color backgroundColor = Colors.white,
-      bool isDisableClicks = false}) async {
+      Color backgroundColor = Colors.white}) async {
     final Map<String, dynamic> params = <String, dynamic>{
-      'header': header.getMap(),
-      'body': body?.getMap(),
+      'header': header?.getMap(),
+      'body': body.getMap(),
       'footer': footer?.getMap(),
       'margin': margin?.getMap(),
+      'userName': userName,
       'gravity': Commons.getWindowGravity(gravity),
       'width': width ?? Constants.MATCH_PARENT,
       'height': height ?? Constants.WRAP_CONTENT,
@@ -153,8 +155,10 @@ class SystemAlertWindow {
   /// `backgroundColor` Background color for the system window. Default is [Colors.white]. This will be the default background color for header, body, footer
   /// `isDisableClicks` Disables the clicks across the system window. Default is false. This is not applicable for bubbles.
   static Future<bool?> updateSystemWindow(
-      {required SystemWindowHeader header,
-      SystemWindowBody? body,
+      {required SystemWindowBody body,
+      required String userName,
+      required bool isDisableClicks,
+      SystemWindowHeader? header,
       SystemWindowFooter? footer,
       SystemWindowMargin? margin,
       SystemWindowGravity gravity = SystemWindowGravity.CENTER,
@@ -163,13 +167,13 @@ class SystemAlertWindow {
       String notificationTitle = "Title",
       String notificationBody = "Body",
       SystemWindowPrefMode prefMode = SystemWindowPrefMode.DEFAULT,
-      Color backgroundColor = Colors.white,
-      bool isDisableClicks = false}) async {
+      Color backgroundColor = Colors.white}) async {
     final Map<String, dynamic> params = <String, dynamic>{
-      'header': header.getMap(),
-      'body': body?.getMap(),
+      'header': header?.getMap(),
+      'body': body.getMap(),
       'footer': footer?.getMap(),
       'margin': margin?.getMap(),
+      'userName': userName,
       'gravity': Commons.getWindowGravity(gravity),
       'width': width ?? Constants.MATCH_PARENT,
       'height': height ?? Constants.WRAP_CONTENT,

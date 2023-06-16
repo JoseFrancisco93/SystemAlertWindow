@@ -47,8 +47,9 @@ public class BubbleActivity extends AppCompatActivity {
         Map<String, Object> bodyMap = Commons.getMapFromObject(paramsMap, KEY_BODY);
         Map<String, Object> footerMap = Commons.getMapFromObject(paramsMap, KEY_FOOTER);
         int bubbleBgColor = Commons.getBgColorFromParams(paramsMap);
+        boolean isDisableClicks = Commons.getIsClicksDisabled(paramsMap);
         LinearLayout headerView = new HeaderView(mContext, headersMap, bubbleBgColor).getView();
-        LinearLayout bodyView = new BodyView(mContext, bodyMap, bubbleBgColor).getView();
+        LinearLayout bodyView = new BodyView(mContext, bodyMap, bubbleBgColor, isDisableClicks).getView();
         LinearLayout footerView = new FooterView(mContext, footerMap, bubbleBgColor).getView();
 
         bubbleLayout.setBackgroundColor(bubbleBgColor);
