@@ -16,6 +16,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await SystemAlertWindow.platformVersion, '42');
+    expect(await SystemAlertWindowAndroid.platformVersion, '42');
   });
 }

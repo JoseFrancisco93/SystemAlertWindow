@@ -20,7 +20,7 @@ void callBack(String tag) {
   switch (tag) {
     case "simple_button":
     case "updated_simple_button":
-      SystemAlertWindow.closeSystemWindow(
+      SystemAlertWindowAndroid.closeSystemWindow(
           prefMode: SystemWindowPrefMode.OVERLAY);
       break;
     case "focus_button":
@@ -47,16 +47,16 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _initPlatformState();
     _requestPermissions();
-    SystemAlertWindow.registerOnClickListener(callBack);
+    SystemAlertWindowAndroid.registerOnClickListener(callBack);
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> _initPlatformState() async {
-    await SystemAlertWindow.enableLogs(true);
+    await SystemAlertWindowAndroid.enableLogs(true);
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await SystemAlertWindow.platformVersion;
+      platformVersion = await SystemAlertWindowAndroid.platformVersion;
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _requestPermissions() async {
-    await SystemAlertWindow.requestPermissions(prefMode: prefMode);
+    await SystemAlertWindowAndroid.requestPermissions(prefMode: prefMode);
   }
 
   void _showOverlayWindow() {
@@ -177,7 +177,7 @@ class _MyAppState extends State<MyApp> {
               SystemWindowPadding(left: 16, right: 16, bottom: 12, top: 10),
           decoration: SystemWindowDecoration(startColor: Colors.white),
           buttonsPosition: ButtonPosition.CENTER);
-      SystemAlertWindow.showSystemWindowCopy(
+      SystemAlertWindowAndroid.showSystemWindow(
           height: 230,
           header: header,
           body: body,
@@ -297,7 +297,7 @@ class _MyAppState extends State<MyApp> {
               SystemWindowPadding(left: 16, right: 16, bottom: 12, top: 10),
           decoration: SystemWindowDecoration(startColor: Colors.white),
           buttonsPosition: ButtonPosition.CENTER);
-      SystemAlertWindow.updateSystemWindow(
+      SystemAlertWindowAndroid.updateSystemWindow(
           height: 230,
           header: header,
           body: body,
@@ -317,7 +317,7 @@ class _MyAppState extends State<MyApp> {
         _isShowingWindow = false;
         _isUpdatedWindow = false;
       });
-      SystemAlertWindow.closeSystemWindow(prefMode: prefMode);
+      SystemAlertWindowAndroid.closeSystemWindow(prefMode: prefMode);
     }
   }
 
@@ -348,7 +348,8 @@ class _MyAppState extends State<MyApp> {
               ),
               TextButton(
                   onPressed: () async {
-                    String logFilePath = await SystemAlertWindow.getLogFile;
+                    String logFilePath =
+                        await SystemAlertWindowAndroid.getLogFile;
                     if (logFilePath != null && logFilePath.isNotEmpty) {
                       Share.shareFiles([logFilePath]);
                     } else {

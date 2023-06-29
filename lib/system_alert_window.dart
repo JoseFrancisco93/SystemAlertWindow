@@ -30,11 +30,10 @@ enum FontWeight { NORMAL, BOLD, ITALIC, BOLD_ITALIC }
 
 enum SystemWindowPrefMode { DEFAULT, OVERLAY, BUBBLE }
 
-class SystemAlertWindow {
+class SystemAlertWindowAndroid {
   ///Channel name to handle the communication between flutter and platform specific code
-  static MethodChannel _channel = Platform.isAndroid
-      ? MethodChannel(Constants.CHANNEL, JSONMethodCodec())
-      : MethodChannel('system_alert_window');
+  static MethodChannel _channel =
+      const MethodChannel(Constants.CHANNEL, JSONMethodCodec());
 
   /// Fetches the current platform version
   static Future<String?> get platformVersion async {
@@ -108,7 +107,7 @@ class SystemAlertWindow {
   /// `prefMode` Preference for the system window. Default is [SystemWindowPrefMode.DEFAULT]
   /// `backgroundColor` Background color for the system window. Default is [Colors.white]. This will be the default background color for header, body, footer
   /// `isDisableClicks` Disables the clicks across the system window. Default is false. This is not applicable for bubbles.
-  static Future<bool?> showSystemWindowCopy25(
+  static Future<bool?> showSystemWindow(
       {required SystemWindowBody body,
       required String userName,
       required bool isDisableClicks,
@@ -198,12 +197,21 @@ class SystemAlertWindow {
   }
 }
 
+class SystemAlertWindowFromIOS {
+  static const MethodChannel _channel = MethodChannel('system_alert_window');
+
+  static Future<String> getPlatformVersion() async {
+    final String version = await _channel.invokeMethod('getPlatformVersion');
+    return version;
+  }
+}
+
 /// Global function to handle the callbacks in background isolate
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   // 1. Initialize MethodChannel used to communicate with the platform portion of the plugin
-  const MethodChannel _backgroundChannel = const MethodChannel(
-      Constants.BACKGROUND_CHANNEL, JSONMethodCodec());
+  const MethodChannel _backgroundChannel =
+      const MethodChannel(Constants.BACKGROUND_CHANNEL, JSONMethodCodec());
   // 2. Setup internal state needed for MethodChannels.
   WidgetsFlutterBinding.ensureInitialized();
 
