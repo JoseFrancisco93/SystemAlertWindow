@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -31,8 +32,9 @@ enum SystemWindowPrefMode { DEFAULT, OVERLAY, BUBBLE }
 
 class SystemAlertWindow {
   ///Channel name to handle the communication between flutter and platform specific code
-  static const MethodChannel _channel =
-      const MethodChannel(Constants.CHANNEL, JSONMethodCodec());
+  static MethodChannel _channel = Platform.isAndroid
+      ? MethodChannel(Constants.CHANNEL, JSONMethodCodec())
+      : MethodChannel('system_alert_window');
 
   /// Fetches the current platform version
   static Future<String?> get platformVersion async {
@@ -200,8 +202,8 @@ class SystemAlertWindow {
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   // 1. Initialize MethodChannel used to communicate with the platform portion of the plugin
-  const MethodChannel _backgroundChannel =
-      const MethodChannel(Constants.BACKGROUND_CHANNEL, JSONMethodCodec());
+  const MethodChannel _backgroundChannel = const MethodChannel(
+      Constants.BACKGROUND_CHANNEL, JSONMethodCodec());
   // 2. Setup internal state needed for MethodChannels.
   WidgetsFlutterBinding.ensureInitialized();
 
