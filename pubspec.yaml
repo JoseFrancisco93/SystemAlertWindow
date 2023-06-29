@@ -30,7 +30,7 @@ flutter:
         package: in.jvapps.system_alert_window
         pluginClass: SystemAlertWindowPlugin
       ios:
-        pluginClass: SystemAlertWindowPlugin
+        pluginClass: SwiftSystemAlertWindowPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
