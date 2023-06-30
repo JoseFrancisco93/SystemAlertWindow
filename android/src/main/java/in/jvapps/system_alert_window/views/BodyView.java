@@ -1,7 +1,6 @@
 package in.jvapps.system_alert_window.views;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.Gravity;
@@ -13,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.content.Intent;
 
 import java.util.List;
 import java.util.Map;
@@ -200,8 +200,7 @@ public class BodyView {
 
     
     private void openApp() {
-        context = this;
-        Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.example.flutter_application_1");
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.docdoc.app");
         intent.setAction(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

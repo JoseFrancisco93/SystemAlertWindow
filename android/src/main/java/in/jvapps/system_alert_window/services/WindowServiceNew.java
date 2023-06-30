@@ -104,7 +104,7 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
         createNotificationChannel();
         // Intent notificationIntent = new Intent(this, SystemAlertWindowPlugin.class);
         Intent notificationIntent = mContext.getPackageManager()
-                .getLaunchIntentForPackage("com.example.flutter_application_1"); //Cambiar Package por el que se va a usar
+                .getLaunchIntentForPackage("com.docdoc.app");
         notificationIntent.setAction(Intent.ACTION_MAIN);
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         PendingIntent pendingIntent;
