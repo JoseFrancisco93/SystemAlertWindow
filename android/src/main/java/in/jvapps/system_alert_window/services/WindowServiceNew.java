@@ -102,7 +102,11 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
     private void showNotification() {
         mContext = this;
         createNotificationChannel();
-        Intent notificationIntent = new Intent(this, SystemAlertWindowPlugin.class);
+        // Intent notificationIntent = new Intent(this, SystemAlertWindowPlugin.class);
+        Intent notificationIntent = mContext.getPackageManager()
+                .getLaunchIntentForPackage("com.example.flutter_application_1");
+        notificationIntent.setAction(Intent.ACTION_MAIN);
+        notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         PendingIntent pendingIntent;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             pendingIntent = PendingIntent.getActivity(this,
@@ -167,23 +171,23 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             params.type = android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             // if (isDisableClicks) {
-            //     params.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-            //             | android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-            //             | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            // params.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            // | android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+            // | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
             // } else {
-                params.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                        | android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-            //}
+            params.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                    | android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            // }
         } else {
             params.type = android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
             // if (isDisableClicks) {
-            //     params.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-            //             | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            // params.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            // | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
             // } else {
-                params.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                        | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-            //}
+            params.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                    | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            // }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && isDisableClicks) {
             params.alpha = 0.8f;
