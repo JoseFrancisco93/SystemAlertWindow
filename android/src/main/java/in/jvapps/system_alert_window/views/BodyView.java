@@ -170,6 +170,7 @@ public class BodyView {
                 systemAlertWindowPlugin.startCallBackHandler(context);
             }
             systemAlertWindowPlugin.invokeCallBack(context, "onClick", "expand");
+            openApp();
         });
 
         // Icon Mic
@@ -195,6 +196,17 @@ public class BodyView {
 
         return columnLayout;
     }
+
+    
+    private void openApp() {
+        context = this;
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.example.flutter_application_1");
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
 
     private ImageView createExpandIcon() {
         ImageView expandIcon = new ImageView(context);
