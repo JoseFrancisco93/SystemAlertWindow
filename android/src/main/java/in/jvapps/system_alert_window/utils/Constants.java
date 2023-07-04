@@ -13,6 +13,8 @@ public class Constants {
 
     static final String CALLBACK_TYPE_ONCLICK = "onClick";
 
+    public static final String PACKAGE_NAME = "com.example.flutter_application_1";
+
     // Internal plugin param map keys
     public static final String KEY_BACKGROUND_COLOR = "bgColor";
     public static final String KEY_HEADER = "header";

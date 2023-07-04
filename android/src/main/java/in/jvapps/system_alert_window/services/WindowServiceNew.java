@@ -103,8 +103,9 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
         mContext = this;
         createNotificationChannel();
         // Intent notificationIntent = new Intent(this, SystemAlertWindowPlugin.class);
+        String packageName = mContext.getPackageName();
         Intent notificationIntent = mContext.getPackageManager()
-                .getLaunchIntentForPackage("com.docdoc.app");
+                .getLaunchIntentForPackage(packageName);
         notificationIntent.setAction(Intent.ACTION_MAIN);
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         PendingIntent pendingIntent;

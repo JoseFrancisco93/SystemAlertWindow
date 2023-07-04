@@ -31,6 +31,8 @@ import static in.jvapps.system_alert_window.utils.Constants.KEY_GRAVITY;
 import static in.jvapps.system_alert_window.utils.Constants.KEY_PADDING;
 import static in.jvapps.system_alert_window.utils.Constants.KEY_ROWS;
 import static in.jvapps.system_alert_window.utils.Constants.KEY_TEXT;
+import static in.jvapps.system_alert_window.utils.Constants.PACKAGE_NAME;
+import in.jvapps.system_alert_window.services.WindowServiceNew;
 
 public class BodyView {
     private final Map<String, Object> bodyMap;
@@ -110,6 +112,10 @@ public class BodyView {
     }
 
     private View createColumn(Map<String, Object> columnMap) {
+        if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
+            systemAlertWindowPlugin.startCallBackHandler(context);
+        }
+        
         RelativeLayout columnLayout = new RelativeLayout(context);
         columnLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -198,15 +204,13 @@ public class BodyView {
         return columnLayout;
     }
 
-    
     private void openApp() {
-        Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.docdoc.app");
-        intent.setAction(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        String packageName = context.getPackageName();
+        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        if (launchIntent != null) {
+            context.startActivity(launchIntent);
+        }
     }
-
 
     private ImageView createExpandIcon() {
         ImageView expandIcon = new ImageView(context);
