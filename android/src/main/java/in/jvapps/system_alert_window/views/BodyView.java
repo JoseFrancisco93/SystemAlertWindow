@@ -115,7 +115,7 @@ public class BodyView {
         if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
             systemAlertWindowPlugin.startCallBackHandler(context);
         }
-        
+
         RelativeLayout columnLayout = new RelativeLayout(context);
         columnLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -163,22 +163,36 @@ public class BodyView {
 
         columnLayout.addView(circleLayout);
 
-        // Icon Expand
-        RelativeLayout.LayoutParams expandIconParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        expandIconParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        expandIconParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        columnLayout.setId(View.generateViewId());
 
-        ImageView expandIcon = createExpandIcon();
-        columnLayout.addView(expandIcon, expandIconParams);
-        expandIcon.setOnClickListener(v -> {
-            if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
-                systemAlertWindowPlugin.startCallBackHandler(context);
+        columnLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
+                    systemAlertWindowPlugin.startCallBackHandler(context);
+                }
+                systemAlertWindowPlugin.invokeCallBack(context, "onClick", "expand");
+                openApp();
             }
-            systemAlertWindowPlugin.invokeCallBack(context, "onClick", "expand");
-            openApp();
         });
+
+        // // Icon Expand
+        // RelativeLayout.LayoutParams expandIconParams = new
+        // RelativeLayout.LayoutParams(
+        // RelativeLayout.LayoutParams.WRAP_CONTENT,
+        // RelativeLayout.LayoutParams.WRAP_CONTENT);
+        // expandIconParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        // expandIconParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+        // ImageView expandIcon = createExpandIcon();
+        // columnLayout.addView(expandIcon, expandIconParams);
+        // expandIcon.setOnClickListener(v -> {
+        // if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
+        // systemAlertWindowPlugin.startCallBackHandler(context);
+        // }
+        // systemAlertWindowPlugin.invokeCallBack(context, "onClick", "expand");
+        // openApp();
+        // });
 
         // Icon Mic
         RelativeLayout.LayoutParams micIconParams = new RelativeLayout.LayoutParams(
@@ -212,36 +226,44 @@ public class BodyView {
         }
     }
 
-    private ImageView createExpandIcon() {
-        ImageView expandIcon = new ImageView(context);
-        expandIcon.setImageResource(R.drawable.ic_expand);
-        int margin = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                2,
-                context.getResources().getDisplayMetrics());
+    // private ImageView createExpandIcon() {
+    // ImageView expandIcon = new ImageView(context);
+    // expandIcon.setImageResource(R.drawable.ic_expand);
+    // int margin = (int) TypedValue.applyDimension(
+    // TypedValue.COMPLEX_UNIT_DIP,
+    // 2,
+    // context.getResources().getDisplayMetrics());
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, margin, margin, 0);
-        expandIcon.setLayoutParams(params);
+    // RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+    // RelativeLayout.LayoutParams.WRAP_CONTENT,
+    // RelativeLayout.LayoutParams.WRAP_CONTENT);
+    // params.setMargins(0, margin, margin, 0);
+    // expandIcon.setLayoutParams(params);
 
-        return expandIcon;
-    }
+    // return expandIcon;
+    // }
 
     private ImageView createIconMic(boolean isMuted) {
         ImageView micIcon = new ImageView(context);
         int iconResource = !isMuted ? R.drawable.ic_mic : R.drawable.ic_mic_off;
         micIcon.setImageResource(iconResource);
-        int margin = (int) TypedValue.applyDimension(
+        // int margin = (int) TypedValue.applyDimension(
+        // TypedValue.COMPLEX_UNIT_DIP,
+        // 2,
+        // context.getResources().getDisplayMetrics());
+        int paddingLB = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
-                2,
+                3,
                 context.getResources().getDisplayMetrics());
-
+        int paddingRT = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                15,
+                context.getResources().getDisplayMetrics());
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(margin, 0, 0, margin);
+        // params.setMargins(margin, 0, 0, margin);
+        micIcon.setPadding(paddingLB, paddingRT, paddingRT, paddingLB);
         micIcon.setLayoutParams(params);
 
         return micIcon;
