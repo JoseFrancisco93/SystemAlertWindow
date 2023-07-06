@@ -40,7 +40,7 @@ public class BodyView {
     private final UiBuilder uiBuilder = UiBuilder.getInstance();
     private final int bgColor;
     private final boolean isDisableClicks;
-    private boolean isMicOn;
+    private boolean isMuted;
 
     private final SystemAlertWindowPlugin systemAlertWindowPlugin = new SystemAlertWindowPlugin();
 
@@ -49,7 +49,7 @@ public class BodyView {
         this.bodyMap = bodyMap;
         this.bgColor = bgColor;
         this.isDisableClicks = isDisableClicks;
-        this.isMicOn = isDisableClicks;
+        this.isMuted = isDisableClicks;
     }
 
     public LinearLayout getView() {
@@ -190,14 +190,14 @@ public class BodyView {
         ImageView micIcon = createIconMic(isDisableClicks);
         columnLayout.addView(micIcon, micIconParams);
         micIcon.setOnClickListener(v -> {
-            isMicOn = !isMicOn;
-            micIcon.setImageResource(isMicOn ? R.drawable.ic_mic : R.drawable.ic_mic_off);
+            isMuted = !isMuted;
+            micIcon.setImageResource(!isMuted ? R.drawable.ic_mic : R.drawable.ic_mic_off);
 
             if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
                 systemAlertWindowPlugin.startCallBackHandler(context);
             }
 
-            String micStatus = isMicOn ? "micOn" : "micOff";
+            String micStatus = !isMuted ? "micOn" : "micOff";
             systemAlertWindowPlugin.invokeCallBack(context, "onClick", micStatus);
         });
 
@@ -229,9 +229,9 @@ public class BodyView {
         return expandIcon;
     }
 
-    private ImageView createIconMic(boolean isMicOn) {
+    private ImageView createIconMic(boolean isMuted) {
         ImageView micIcon = new ImageView(context);
-        int iconResource = isMicOn ? R.drawable.ic_mic : R.drawable.ic_mic_off;
+        int iconResource = !isMuted ? R.drawable.ic_mic : R.drawable.ic_mic_off;
         micIcon.setImageResource(iconResource);
         int margin = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
