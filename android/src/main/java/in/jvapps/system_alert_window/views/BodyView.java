@@ -163,18 +163,18 @@ public class BodyView {
 
         columnLayout.addView(circleLayout);
 
-        columnLayout.setId(View.generateViewId());
+        // columnLayout.setId(View.generateViewId());
 
-        columnLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
-                    systemAlertWindowPlugin.startCallBackHandler(context);
-                }
-                systemAlertWindowPlugin.invokeCallBack(context, "onClick", "expand");
-                openApp();
-            }
-        });
+        // columnLayout.setOnClickListener(new View.OnClickListener() {
+        // @Override
+        // public void onClick(View view) {
+        // if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
+        // systemAlertWindowPlugin.startCallBackHandler(context);
+        // }
+        // systemAlertWindowPlugin.invokeCallBack(context, "onClick", "expand");
+        // openApp();
+        // }
+        // });
 
         // // Icon Expand
         // RelativeLayout.LayoutParams expandIconParams = new

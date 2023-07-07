@@ -45,6 +45,11 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
     public static final String INTENT_EXTRA_IS_UPDATE_WINDOW = "IsUpdateWindow";
     public static final String INTENT_EXTRA_IS_CLOSE_WINDOW = "IsCloseWindow";
 
+    private static final long CLICK_DURATION_THRESHOLD = 70;
+    private long downTime;
+
+    private final SystemAlertWindowPlugin systemAlertWindowPlugin = new SystemAlertWindowPlugin();
+
     private WindowManager wm;
 
     private String windowGravity;
@@ -291,6 +296,7 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
 
             int action = event.getAction();
             if (action == MotionEvent.ACTION_DOWN) {
+                downTime = System.currentTimeMillis();
                 float x = event.getRawX();
                 float y = event.getRawY();
                 moving = false;
@@ -306,10 +312,28 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
                 wm.updateViewLayout(windowView, params);
                 moving = true;
             } else if (action == MotionEvent.ACTION_UP) {
+                long clickDuration = System.currentTimeMillis() - downTime;
+                if (clickDuration <= CLICK_DURATION_THRESHOLD) {
+                    if (systemAlertWindowPlugin != null) {
+                        if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
+                            systemAlertWindowPlugin.startCallBackHandler(mContext);
+                        }
+                        systemAlertWindowPlugin.invokeCallBack(mContext, "onClick", "expand");
+                    }
+                    openApp();
+                }
                 return moving;
             }
         }
         return false;
+    }
+
+    private void openApp() {
+        String packageName = mContext.getPackageName();
+        Intent launchIntent = mContext.getPackageManager().getLaunchIntentForPackage(packageName);
+        if (launchIntent != null) {
+            mContext.startActivity(launchIntent);
+        }
     }
 
     @Override
