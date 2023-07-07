@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.content.Intent;
+import android.text.TextUtils;
+import android.graphics.Typeface;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,8 @@ import static in.jvapps.system_alert_window.utils.Constants.KEY_ROWS;
 import static in.jvapps.system_alert_window.utils.Constants.KEY_TEXT;
 import static in.jvapps.system_alert_window.utils.Constants.PACKAGE_NAME;
 import in.jvapps.system_alert_window.services.WindowServiceNew;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 public class BodyView {
     private final Map<String, Object> bodyMap;
@@ -135,64 +139,57 @@ public class BodyView {
         columnLayout.setLayoutParams(columnParams);
 
         RelativeLayout.LayoutParams circleParams = new RelativeLayout.LayoutParams(
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60,
                         context.getResources().getDisplayMetrics()),
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60,
                         context.getResources().getDisplayMetrics()));
         int marginVertical = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
-                12,
+                6,
                 context.getResources().getDisplayMetrics());
         circleParams.setMargins(0, marginVertical, 0, marginVertical);
         circleParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 
         TextView textView = uiBuilder.getTextView(context, Commons.getMapFromObject(columnMap, KEY_TEXT));
-        textView.setTextColor(Color.BLACK);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+        textView.setTextColor(Color.WHITE);
+        textView.setTypeface(null, Typeface.BOLD);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         textView.setGravity(Gravity.CENTER);
-
-        GradientDrawable circleBackground = new GradientDrawable();
-        circleBackground.setShape(GradientDrawable.OVAL);
-        circleBackground.setColor(Color.WHITE);
 
         RelativeLayout circleLayout = new RelativeLayout(context);
         circleLayout.setLayoutParams(circleParams);
         circleLayout.setGravity(Gravity.CENTER);
         circleLayout.addView(textView);
-        circleLayout.setBackground(circleBackground);
+
+        String imageURLView = "";
+
+        if (TextUtils.isEmpty(imageURLView)) {
+            GradientDrawable circleBackground = new GradientDrawable();
+            circleBackground.setShape(GradientDrawable.OVAL);
+            circleBackground.setColor(Color.parseColor("#00DEDB"));
+            circleLayout.setBackground(circleBackground);
+        } else {
+            int circleSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60,
+                    context.getResources().getDisplayMetrics());
+
+            RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(circleSize, circleSize);
+            imageParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+            ImageView imageView = new ImageView(context);
+            imageView.setLayoutParams(imageParams);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            Glide.with(context)
+                    .load(imageURLView)
+                    .apply(new RequestOptions()
+                            .override(circleSize, circleSize)
+                            .centerCrop())
+                    .into(imageView);
+
+            circleLayout.addView(imageView);
+        }
 
         columnLayout.addView(circleLayout);
-
-        // columnLayout.setId(View.generateViewId());
-
-        // columnLayout.setOnClickListener(new View.OnClickListener() {
-        // @Override
-        // public void onClick(View view) {
-        // if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
-        // systemAlertWindowPlugin.startCallBackHandler(context);
-        // }
-        // systemAlertWindowPlugin.invokeCallBack(context, "onClick", "expand");
-        // openApp();
-        // }
-        // });
-
-        // // Icon Expand
-        // RelativeLayout.LayoutParams expandIconParams = new
-        // RelativeLayout.LayoutParams(
-        // RelativeLayout.LayoutParams.WRAP_CONTENT,
-        // RelativeLayout.LayoutParams.WRAP_CONTENT);
-        // expandIconParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        // expandIconParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-
-        // ImageView expandIcon = createExpandIcon();
-        // columnLayout.addView(expandIcon, expandIconParams);
-        // expandIcon.setOnClickListener(v -> {
-        // if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
-        // systemAlertWindowPlugin.startCallBackHandler(context);
-        // }
-        // systemAlertWindowPlugin.invokeCallBack(context, "onClick", "expand");
-        // openApp();
-        // });
 
         // Icon Mic
         RelativeLayout.LayoutParams micIconParams = new RelativeLayout.LayoutParams(
