@@ -20,10 +20,12 @@ import static in.jvapps.system_alert_window.utils.Constants.INTENT_EXTRA_PARAMS_
 import static in.jvapps.system_alert_window.utils.Constants.KEY_BODY;
 import static in.jvapps.system_alert_window.utils.Constants.KEY_FOOTER;
 import static in.jvapps.system_alert_window.utils.Constants.KEY_HEADER;
+import static in.jvapps.system_alert_window.utils.Constants.KEY_INITIALS;
+import static in.jvapps.system_alert_window.utils.Constants.KEY_IMAGE_URL;
 
 public class BubbleActivity extends AppCompatActivity {
 
-    private  LinearLayout bubbleLayout;
+    private LinearLayout bubbleLayout;
     private HashMap<String, Object> paramsMap;
 
     private Context mContext;
@@ -42,14 +44,17 @@ public class BubbleActivity extends AppCompatActivity {
         }
     }
 
-    void configureUI(){
+    void configureUI() {
         Map<String, Object> headersMap = Commons.getMapFromObject(paramsMap, KEY_HEADER);
         Map<String, Object> bodyMap = Commons.getMapFromObject(paramsMap, KEY_BODY);
         Map<String, Object> footerMap = Commons.getMapFromObject(paramsMap, KEY_FOOTER);
         int bubbleBgColor = Commons.getBgColorFromParams(paramsMap);
         boolean isDisableClicks = Commons.getIsClicksDisabled(paramsMap);
+        String initials = Commons.getStringFromMap(paramsMap, KEY_INITIALS);
+        String imageUrl = Commons.getStringFromMap(paramsMap, KEY_IMAGE_URL);
         LinearLayout headerView = new HeaderView(mContext, headersMap, bubbleBgColor).getView();
-        LinearLayout bodyView = new BodyView(mContext, bodyMap, bubbleBgColor, isDisableClicks).getView();
+        LinearLayout bodyView = new BodyView(mContext, bodyMap, bubbleBgColor, isDisableClicks, initials, imageUrl)
+                .getView();
         LinearLayout footerView = new FooterView(mContext, footerMap, bubbleBgColor).getView();
 
         bubbleLayout.setBackgroundColor(bubbleBgColor);

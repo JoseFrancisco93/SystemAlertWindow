@@ -45,7 +45,7 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
     public static final String INTENT_EXTRA_IS_UPDATE_WINDOW = "IsUpdateWindow";
     public static final String INTENT_EXTRA_IS_CLOSE_WINDOW = "IsCloseWindow";
 
-    private static final long CLICK_DURATION_THRESHOLD = 70;
+    private static final long CLICK_DURATION_THRESHOLD = 150;
     private long downTime;
 
     private final SystemAlertWindowPlugin systemAlertWindowPlugin = new SystemAlertWindowPlugin();
@@ -54,6 +54,8 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
 
     private String windowGravity;
     private String windowUserName;
+    private String windowInitials;
+    private String windowImageUrl;
     private int windowWidth;
     private int windowHeight;
     private Margin windowMargin;
@@ -157,9 +159,12 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
         LogUtils.getInstance().i(TAG, String.valueOf(isDisableClicks));
         windowGravity = (String) paramsMap.get(Constants.KEY_GRAVITY);
         windowUserName = (String) paramsMap.get(Constants.KEY_USERNAME);
+        windowInitials = (String) paramsMap.get(Constants.KEY_INITIALS);
+        windowImageUrl = (String) paramsMap.get(Constants.KEY_IMAGE_URL);
         windowWidth = NumberUtils.getInt(paramsMap.get(Constants.KEY_WIDTH));
         windowHeight = NumberUtils.getInt(paramsMap.get(Constants.KEY_HEIGHT));
-        bodyView = new BodyView(mContext, bodyMap, windowBgColor, isDisableClicks).getView();
+        bodyView = new BodyView(mContext, bodyMap, windowBgColor, isDisableClicks, windowInitials, windowImageUrl)
+                .getView();
         if (headersMap != null)
             headerView = new HeaderView(mContext, headersMap, windowBgColor).getView();
         if (footerMap != null)

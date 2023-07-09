@@ -52,6 +52,14 @@ public class Commons {
         return false;
     }
 
+    public static String getStringFromMap(@NonNull Map<String, Object> paramsMap, String key) {
+        Object value = paramsMap.get(key);
+        if(value != null){
+            return value.toString();
+        }
+        return "";
+    }
+
     public static float getSpFromPixels(@NonNull Context context, float px) {
         float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
         return px / scaledDensity;

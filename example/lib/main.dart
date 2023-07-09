@@ -180,7 +180,6 @@ class _MyAppState extends State<MyApp> {
       SystemAlertWindowAndroid.showSystemWindow(
           height: 230,
           header: header,
-          body: body,
           footer: footer,
           margin: SystemWindowMargin(left: 8, right: 8, top: 200, bottom: 0),
           gravity: SystemWindowGravity.TOP,
@@ -188,7 +187,7 @@ class _MyAppState extends State<MyApp> {
           notificationBody: "+1 646 980 4741",
           prefMode: prefMode,
           backgroundColor: Colors.black12,
-          isDisableClicks: false);
+          isMuted: false);
       setState(() {
         _isShowingWindow = true;
       });

@@ -33,6 +33,7 @@ import static in.jvapps.system_alert_window.utils.Constants.KEY_GRAVITY;
 import static in.jvapps.system_alert_window.utils.Constants.KEY_PADDING;
 import static in.jvapps.system_alert_window.utils.Constants.KEY_ROWS;
 import static in.jvapps.system_alert_window.utils.Constants.KEY_TEXT;
+import static in.jvapps.system_alert_window.utils.Constants.KEY_INITIALS;
 import static in.jvapps.system_alert_window.utils.Constants.PACKAGE_NAME;
 import in.jvapps.system_alert_window.services.WindowServiceNew;
 import com.bumptech.glide.Glide;
@@ -45,15 +46,20 @@ public class BodyView {
     private final int bgColor;
     private final boolean isDisableClicks;
     private boolean isMuted;
+    private String initials;
+    private String imageUrl;
 
     private final SystemAlertWindowPlugin systemAlertWindowPlugin = new SystemAlertWindowPlugin();
 
-    public BodyView(Context context, Map<String, Object> bodyMap, int bgColor, boolean isDisableClicks) {
+    public BodyView(Context context, Map<String, Object> bodyMap, int bgColor, boolean isDisableClicks, String initials,
+            String imageUrl) {
         this.context = context;
         this.bodyMap = bodyMap;
         this.bgColor = bgColor;
         this.isDisableClicks = isDisableClicks;
         this.isMuted = isDisableClicks;
+        this.initials = initials;
+        this.imageUrl = imageUrl;
     }
 
     public LinearLayout getView() {
@@ -150,7 +156,10 @@ public class BodyView {
         circleParams.setMargins(0, marginVertical, 0, marginVertical);
         circleParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 
-        TextView textView = uiBuilder.getTextView(context, Commons.getMapFromObject(columnMap, KEY_TEXT));
+        // TextView textView = uiBuilder.getTextView(context,
+        // Commons.getMapFromObject(columnMap, KEY_INITIALS));
+        TextView textView = new TextView(context);
+        textView.setText(initials);
         textView.setTextColor(Color.WHITE);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
@@ -159,15 +168,15 @@ public class BodyView {
         RelativeLayout circleLayout = new RelativeLayout(context);
         circleLayout.setLayoutParams(circleParams);
         circleLayout.setGravity(Gravity.CENTER);
-        circleLayout.addView(textView);
 
-        String imageURLView = "";
+        String imageURLView = imageUrl;
 
         if (TextUtils.isEmpty(imageURLView)) {
             GradientDrawable circleBackground = new GradientDrawable();
             circleBackground.setShape(GradientDrawable.OVAL);
             circleBackground.setColor(Color.parseColor("#00DEDB"));
             circleLayout.setBackground(circleBackground);
+            circleLayout.addView(textView);
         } else {
             int circleSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60,
                     context.getResources().getDisplayMetrics());

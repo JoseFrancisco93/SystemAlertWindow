@@ -11,6 +11,9 @@ import 'package:system_alert_window/models/system_window_margin.dart';
 import 'package:system_alert_window/utils/commons.dart';
 import 'package:system_alert_window/utils/constants.dart';
 
+import 'models/system_window_decoration.dart';
+import 'models/system_window_padding.dart';
+
 export 'models/system_window_body.dart';
 export 'models/system_window_button.dart';
 export 'models/system_window_decoration.dart';
@@ -108,9 +111,10 @@ class SystemAlertWindowAndroid {
   /// `backgroundColor` Background color for the system window. Default is [Colors.white]. This will be the default background color for header, body, footer
   /// `isDisableClicks` Disables the clicks across the system window. Default is false. This is not applicable for bubbles.
   static Future<bool?> showSystemWindow(
-      {required SystemWindowBody body,
-      required String userName,
-      required bool isDisableClicks,
+      {required String userName,
+      required bool isMuted,
+      required String initials,
+      required String imageUrl,
       SystemWindowHeader? header,
       SystemWindowFooter? footer,
       SystemWindowMargin? margin,
@@ -121,6 +125,21 @@ class SystemAlertWindowAndroid {
       String notificationBody = "Body",
       SystemWindowPrefMode prefMode = SystemWindowPrefMode.DEFAULT,
       Color backgroundColor = Colors.white}) async {
+    SystemWindowBody body = SystemWindowBody(
+      decoration: SystemWindowDecoration(
+        startColor: Colors.black,
+        borderRadius: 8,
+      ),
+      rows: [
+        EachRow(
+          columns: [
+            EachColumn(),
+          ],
+          gravity: ContentGravity.CENTER,
+        ),
+      ],
+      padding: SystemWindowPadding(left: 4, right: 4, bottom: 4, top: 4),
+    );
     final Map<String, dynamic> params = <String, dynamic>{
       'header': header?.getMap(),
       'body': body.getMap(),
@@ -131,7 +150,9 @@ class SystemAlertWindowAndroid {
       'width': width ?? Constants.MATCH_PARENT,
       'height': height ?? Constants.WRAP_CONTENT,
       'bgColor': backgroundColor.toHex(leadingHashSign: true, withAlpha: true),
-      'isDisableClicks': isDisableClicks
+      'isDisableClicks': isMuted,
+      'initials': initials,
+      'imageUrl': imageUrl,
     };
     return await _channel.invokeMethod('showSystemWindow', [
       notificationTitle,
