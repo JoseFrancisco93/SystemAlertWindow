@@ -128,7 +128,9 @@ class SystemAlertWindowAndroid {
     SystemWindowBody body = SystemWindowBody(
       decoration: SystemWindowDecoration(
         startColor: Colors.black,
-        borderRadius: 8,
+        borderRadius: 15,
+        borderWidth: 1,
+        borderColor: Colors.white70,
       ),
       rows: [
         EachRow(
