@@ -65,6 +65,7 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
     private LinearLayout windowView;
     private LinearLayout headerView;
     private LinearLayout bodyView;
+    private BodyView bodyView2;
     private LinearLayout footerView;
 
     private float offsetX;
@@ -163,8 +164,9 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
         windowImageUrl = (String) paramsMap.get(Constants.KEY_IMAGE_URL);
         windowWidth = NumberUtils.getInt(paramsMap.get(Constants.KEY_WIDTH));
         windowHeight = NumberUtils.getInt(paramsMap.get(Constants.KEY_HEIGHT));
-        bodyView = new BodyView(mContext, bodyMap, windowBgColor, isDisableClicks, windowInitials, windowImageUrl)
-                .getView();
+        bodyView2 = new BodyView(mContext, bodyMap, windowBgColor, isDisableClicks, windowInitials, windowImageUrl);
+        bodyView = bodyView2.getView();
+        systemAlertWindowPlugin.setBodyView(bodyView2);
         if (headersMap != null)
             headerView = new HeaderView(mContext, headersMap, windowBgColor).getView();
         if (footerMap != null)

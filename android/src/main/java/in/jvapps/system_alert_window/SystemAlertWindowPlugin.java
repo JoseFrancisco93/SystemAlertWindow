@@ -48,6 +48,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.view.FlutterCallbackInformation;
+import in.jvapps.system_alert_window.views.BodyView;
 
 public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, ActivityAware, MethodCallHandler {
 
@@ -55,6 +56,8 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
     private Context mContext;
     private Activity mActivity;
     public AtomicBoolean sIsIsolateRunning = new AtomicBoolean(false);
+    public int audioInfo = 0;
+    private BodyView bodyView2;
 
     private MethodChannel methodChannel;
     private MethodChannel backgroundChannel;
@@ -181,6 +184,12 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                     } else {
                         result.success(false);
                     }
+                    break;
+                case "sendAudioInfo":
+                    arguments = (JSONArray) call.arguments;
+                    int newAudioInfo = (int) arguments.get(0);
+                    LogUtils.getInstance().e(TAG, "👍" + newAudioInfo);
+                    bodyView2.getValueInt(newAudioInfo);
                     break;
                 case "showSystemWindow":
                     assert (call.arguments != null);
@@ -454,5 +463,9 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
         Icon icon = Icon.createWithResource(mContext, R.drawable.ic_notification);
         NotificationHelper notificationHelper = NotificationHelper.getInstance(mContext);
         notificationHelper.showNotification(icon, title, body, params);
+    }
+
+    public void setBodyView(BodyView bodyView) {
+        this.bodyView2 = bodyView;
     }
 }

@@ -68,6 +68,11 @@ class SystemAlertWindowAndroid {
         'requestPermissions', [Commons.getSystemWindowPrefMode(prefMode)]);
   }
 
+  /// Method to enable the logs. By default, logs are disabled
+  static Future<void> sendAudioInfo(int volume) async {
+    await _channel.invokeMethod('sendAudioInfo', [volume]);
+  }
+
   /// Register your callbackFunction to receive click events
   /// Your callback function should be declared as a global function (Outside the scope of the class)
   /// Don't forget to add @pragma('vm:entry-point') above your global function

@@ -40,29 +40,35 @@ public class BubbleActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
             paramsMap = (HashMap<String, Object>) intent.getSerializableExtra(INTENT_EXTRA_PARAMS_MAP);
-            configureUI();
+            // configureUI();
         }
     }
 
-    void configureUI() {
-        Map<String, Object> headersMap = Commons.getMapFromObject(paramsMap, KEY_HEADER);
-        Map<String, Object> bodyMap = Commons.getMapFromObject(paramsMap, KEY_BODY);
-        Map<String, Object> footerMap = Commons.getMapFromObject(paramsMap, KEY_FOOTER);
-        int bubbleBgColor = Commons.getBgColorFromParams(paramsMap);
-        boolean isDisableClicks = Commons.getIsClicksDisabled(paramsMap);
-        String initials = Commons.getStringFromMap(paramsMap, KEY_INITIALS);
-        String imageUrl = Commons.getStringFromMap(paramsMap, KEY_IMAGE_URL);
-        LinearLayout headerView = new HeaderView(mContext, headersMap, bubbleBgColor).getView();
-        LinearLayout bodyView = new BodyView(mContext, bodyMap, bubbleBgColor, isDisableClicks, initials, imageUrl)
-                .getView();
-        LinearLayout footerView = new FooterView(mContext, footerMap, bubbleBgColor).getView();
+    // void configureUI() {
+    // Map<String, Object> headersMap = Commons.getMapFromObject(paramsMap,
+    // KEY_HEADER);
+    // Map<String, Object> bodyMap = Commons.getMapFromObject(paramsMap, KEY_BODY);
+    // Map<String, Object> footerMap = Commons.getMapFromObject(paramsMap,
+    // KEY_FOOTER);
+    // int bubbleBgColor = Commons.getBgColorFromParams(paramsMap);
+    // boolean isDisableClicks = Commons.getIsClicksDisabled(paramsMap);
+    // String initials = Commons.getStringFromMap(paramsMap, KEY_INITIALS);
+    // String imageUrl = Commons.getStringFromMap(paramsMap, KEY_IMAGE_URL);
+    // LinearLayout headerView = new HeaderView(mContext, headersMap,
+    // bubbleBgColor).getView();
+    // // LinearLayout bodyView = new BodyView(mContext, bodyMap, bubbleBgColor,
+    // isDisableClicks, initials, imageUrl)
+    // // .getView();
+    // LinearLayout footerView = new FooterView(mContext, footerMap,
+    // bubbleBgColor).getView();
 
-        bubbleLayout.setBackgroundColor(bubbleBgColor);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT);
-        bubbleLayout.setLayoutParams(params);
-        bubbleLayout.addView(headerView);
-        bubbleLayout.addView(bodyView);
-        bubbleLayout.addView(footerView);
-    }
+    // bubbleLayout.setBackgroundColor(bubbleBgColor);
+    // FrameLayout.LayoutParams params = new
+    // FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+    // FrameLayout.LayoutParams.WRAP_CONTENT);
+    // bubbleLayout.setLayoutParams(params);
+    // bubbleLayout.addView(headerView);
+    // bubbleLayout.addView(bodyView);
+    // bubbleLayout.addView(footerView);
+    // }
 }

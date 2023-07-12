@@ -39,6 +39,15 @@ import in.jvapps.system_alert_window.services.WindowServiceNew;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.AccelerateDecelerateInterpolator;
+
+import android.util.Log;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class BodyView {
     private final Map<String, Object> bodyMap;
     private final Context context;
@@ -48,6 +57,9 @@ public class BodyView {
     private boolean isMuted;
     private String initials;
     private String imageUrl;
+    private static int audioInfo = 0;
+    private static RelativeLayout circleLayout;
+    private static ScaleAnimation scaleAnimation;
 
     private final SystemAlertWindowPlugin systemAlertWindowPlugin = new SystemAlertWindowPlugin();
 
@@ -60,6 +72,20 @@ public class BodyView {
         this.isMuted = isDisableClicks;
         this.initials = initials;
         this.imageUrl = imageUrl;
+    }
+
+    public static void getValueInt(int value) {
+        audioInfo = value;
+        if (circleLayout != null) {
+            float valueMax = value / 100.0f;
+            scaleAnimation = new ScaleAnimation(0.8f, valueMax, 0.8f, valueMax,
+                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            scaleAnimation.setDuration(300);
+            scaleAnimation.setRepeatMode(Animation.REVERSE);
+            // scaleAnimation.setRepeatCount(Animation.INFINITE);
+            scaleAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+            circleLayout.startAnimation(scaleAnimation);
+        }
     }
 
     public LinearLayout getView() {
@@ -139,11 +165,6 @@ public class BodyView {
         }
 
         // Circle Decoration
-        RelativeLayout.LayoutParams columnParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
-        columnLayout.setLayoutParams(columnParams);
-
         RelativeLayout.LayoutParams circleParams = new RelativeLayout.LayoutParams(
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60,
                         context.getResources().getDisplayMetrics()),
@@ -156,8 +177,29 @@ public class BodyView {
         circleParams.setMargins(0, marginVertical, 0, marginVertical);
         circleParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 
-        // TextView textView = uiBuilder.getTextView(context,
-        // Commons.getMapFromObject(columnMap, KEY_INITIALS));
+        circleLayout = new RelativeLayout(context);
+        circleLayout.setLayoutParams(circleParams);
+        circleLayout.setGravity(Gravity.CENTER);
+
+        // Circle Background
+        GradientDrawable circleBackground = new GradientDrawable();
+        circleBackground.setShape(GradientDrawable.OVAL);
+        circleBackground.setColor(Color.argb(64, 255, 255, 255));
+        circleLayout.setBackground(circleBackground);
+
+        RelativeLayout.LayoutParams circleParams2 = new RelativeLayout.LayoutParams(
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 45,
+                        context.getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 45,
+                        context.getResources().getDisplayMetrics()));
+        circleParams2.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+        circleLayout.setLayoutParams(circleParams2);
+
+        // circleLayout.startAnimation(scaleAnimation);
+
+        columnLayout.addView(circleLayout);
+
         TextView textView = new TextView(context);
         textView.setText(initials);
         textView.setTextColor(Color.WHITE);
@@ -165,18 +207,10 @@ public class BodyView {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         textView.setGravity(Gravity.CENTER);
 
-        RelativeLayout circleLayout = new RelativeLayout(context);
-        circleLayout.setLayoutParams(circleParams);
-        circleLayout.setGravity(Gravity.CENTER);
-
         String imageURLView = imageUrl;
 
         if (TextUtils.isEmpty(imageURLView)) {
-            GradientDrawable circleBackground = new GradientDrawable();
-            circleBackground.setShape(GradientDrawable.OVAL);
-            circleBackground.setColor(Color.parseColor("#00DEDB"));
-            circleLayout.setBackground(circleBackground);
-            circleLayout.addView(textView);
+            columnLayout.addView(textView);
         } else {
             int circleSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60,
                     context.getResources().getDisplayMetrics());
@@ -195,10 +229,8 @@ public class BodyView {
                             .centerCrop())
                     .into(imageView);
 
-            circleLayout.addView(imageView);
+            columnLayout.addView(imageView);
         }
-
-        columnLayout.addView(circleLayout);
 
         // Icon Mic
         RelativeLayout.LayoutParams micIconParams = new RelativeLayout.LayoutParams(
@@ -232,31 +264,10 @@ public class BodyView {
         }
     }
 
-    // private ImageView createExpandIcon() {
-    // ImageView expandIcon = new ImageView(context);
-    // expandIcon.setImageResource(R.drawable.ic_expand);
-    // int margin = (int) TypedValue.applyDimension(
-    // TypedValue.COMPLEX_UNIT_DIP,
-    // 2,
-    // context.getResources().getDisplayMetrics());
-
-    // RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-    // RelativeLayout.LayoutParams.WRAP_CONTENT,
-    // RelativeLayout.LayoutParams.WRAP_CONTENT);
-    // params.setMargins(0, margin, margin, 0);
-    // expandIcon.setLayoutParams(params);
-
-    // return expandIcon;
-    // }
-
     private ImageView createIconMic(boolean isMuted) {
         ImageView micIcon = new ImageView(context);
         int iconResource = !isMuted ? R.drawable.ic_mic : R.drawable.ic_mic_off;
         micIcon.setImageResource(iconResource);
-        // int margin = (int) TypedValue.applyDimension(
-        // TypedValue.COMPLEX_UNIT_DIP,
-        // 2,
-        // context.getResources().getDisplayMetrics());
         int paddingLB = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 3,
