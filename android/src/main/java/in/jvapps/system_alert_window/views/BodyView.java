@@ -208,6 +208,17 @@ public class BodyView {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         textView.setGravity(Gravity.CENTER);
 
+        GradientDrawable textBackground = new GradientDrawable();
+        textBackground.setShape(GradientDrawable.OVAL);
+        textBackground.setColor(Color.parseColor("#00DEDB"));
+        textView.setBackground(textBackground);
+
+        int textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 55,
+                context.getResources().getDisplayMetrics());
+        RelativeLayout.LayoutParams textParams = new RelativeLayout.LayoutParams(textSize, textSize);
+        textParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        textView.setLayoutParams(textParams);
+
         String imageURLView = imageUrl;
 
         if (TextUtils.isEmpty(imageURLView)) {
