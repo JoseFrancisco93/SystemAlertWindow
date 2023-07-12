@@ -50,7 +50,7 @@ import java.util.TimerTask;
 
 public class BodyView {
     private final Map<String, Object> bodyMap;
-    private final Context context;
+    private static Context context;
     private final UiBuilder uiBuilder = UiBuilder.getInstance();
     private final int bgColor;
     private final boolean isDisableClicks;
@@ -78,13 +78,14 @@ public class BodyView {
         audioInfo = value;
         if (circleLayout != null) {
             float valueMax = value / 100.0f;
-            scaleAnimation = new ScaleAnimation(0.8f, valueMax, 0.8f, valueMax,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            scaleAnimation.setDuration(300);
-            scaleAnimation.setRepeatMode(Animation.REVERSE);
-            // scaleAnimation.setRepeatCount(Animation.INFINITE);
-            scaleAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-            circleLayout.startAnimation(scaleAnimation);
+            int valueInt = (int) (45 * valueMax);
+            RelativeLayout.LayoutParams circleParams3 = new RelativeLayout.LayoutParams(
+                    (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInt,
+                            context.getResources().getDisplayMetrics()),
+                    (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInt,
+                            context.getResources().getDisplayMetrics()));
+            circleParams3.addRule(RelativeLayout.CENTER_IN_PARENT);
+            circleLayout.setLayoutParams(circleParams3);
         }
     }
 
