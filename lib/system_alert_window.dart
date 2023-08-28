@@ -223,6 +223,65 @@ class SystemAlertWindowAndroid {
     return await _channel.invokeMethod(
         'closeSystemWindow', [Commons.getSystemWindowPrefMode(prefMode)]);
   }
+
+  static Future<bool?> showNotificationAndroid(
+      {required String userName,
+      bool isMuted = false,
+      String initials = '',
+      String imageUrl = '',
+      SystemWindowHeader? header,
+      SystemWindowFooter? footer,
+      SystemWindowMargin? margin,
+      SystemWindowGravity gravity = SystemWindowGravity.CENTER,
+      int? width,
+      int? height,
+      String notificationTitle = "Title",
+      String notificationBody = "Body",
+      SystemWindowPrefMode prefMode = SystemWindowPrefMode.DEFAULT,
+      Color backgroundColor = Colors.white}) async {
+    SystemWindowBody body = SystemWindowBody(
+      decoration: SystemWindowDecoration(
+        startColor: Colors.black,
+        borderRadius: 15,
+        borderWidth: 1,
+        borderColor: Colors.white70,
+      ),
+      rows: [
+        EachRow(
+          columns: [
+            EachColumn(),
+          ],
+          gravity: ContentGravity.CENTER,
+        ),
+      ],
+      padding: SystemWindowPadding(left: 4, right: 4, bottom: 4, top: 4),
+    );
+    final Map<String, dynamic> params = <String, dynamic>{
+      'header': header?.getMap(),
+      'body': body.getMap(),
+      'footer': footer?.getMap(),
+      'margin': margin?.getMap(),
+      'userName': userName,
+      'gravity': Commons.getWindowGravity(gravity),
+      'width': width ?? Constants.MATCH_PARENT,
+      'height': height ?? Constants.WRAP_CONTENT,
+      'bgColor': backgroundColor.toHex(leadingHashSign: true, withAlpha: true),
+      'isDisableClicks': isMuted,
+      'initials': initials,
+      'imageUrl': imageUrl,
+    };
+    return await _channel.invokeMethod('showNotification', [
+      notificationTitle,
+      notificationBody,
+      params,
+      Commons.getSystemWindowPrefMode(prefMode)
+    ]);
+  }
+
+  static Future<bool?> closeNotificationAndroid() async {
+    return await _channel.invokeMethod(
+        'closeNotification');
+  }
 }
 
 class SystemAlertWindowFromIOS {

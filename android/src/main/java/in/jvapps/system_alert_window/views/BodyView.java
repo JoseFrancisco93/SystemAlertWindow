@@ -35,7 +35,6 @@ import static in.jvapps.system_alert_window.utils.Constants.KEY_ROWS;
 import static in.jvapps.system_alert_window.utils.Constants.KEY_TEXT;
 import static in.jvapps.system_alert_window.utils.Constants.KEY_INITIALS;
 import static in.jvapps.system_alert_window.utils.Constants.PACKAGE_NAME;
-import in.jvapps.system_alert_window.services.WindowServiceNew;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 

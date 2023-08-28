@@ -36,9 +36,9 @@ import in.jvapps.system_alert_window.views.BodyView;
 import in.jvapps.system_alert_window.views.FooterView;
 import in.jvapps.system_alert_window.views.HeaderView;
 
-public class WindowServiceNew extends Service implements View.OnTouchListener {
+public class WindowServiceNotification extends Service implements View.OnTouchListener {
 
-    private static final String TAG = WindowServiceNew.class.getSimpleName();
+    private static final String TAG = WindowServiceNotification.class.getSimpleName();
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
     private static final int NOTIFICATION_ID = 1;
     private static final int WINDOW_VIEW_ID = 1947;
@@ -89,19 +89,22 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
                     .getSerializableExtra(Constants.INTENT_EXTRA_PARAMS_MAP);
             boolean isCloseWindow = intent.getBooleanExtra(INTENT_EXTRA_IS_CLOSE_WINDOW, false);
             if (!isCloseWindow) {
-                assert paramsMap != null;
-                boolean isUpdateWindow = intent.getBooleanExtra(INTENT_EXTRA_IS_UPDATE_WINDOW, false);
-                if (isUpdateWindow && wm != null && windowView != null) {
-                    if (ViewCompat.isAttachedToWindow(windowView)) {
-                        updateWindow(paramsMap);
-                    } else {
-                        createWindow(paramsMap);
-                    }
-                } else {
-                    createWindow(paramsMap);
-                }
-                // showNotification();
+                // assert paramsMap != null;
+                // boolean isUpdateWindow =
+                // intent.getBooleanExtra(INTENT_EXTRA_IS_UPDATE_WINDOW, false);
+                // if (isUpdateWindow && wm != null && windowView != null) {
+                // if (ViewCompat.isAttachedToWindow(windowView)) {
+                // updateWindow(paramsMap);
+                // } else {
+                // createWindow(paramsMap);
+                // }
+                // } else {
+                // createWindow(paramsMap);
+                // }
+                setWindowLayoutFromMap(paramsMap);
+                showNotification();
             } else {
+                // onDestroy();
                 closeWindow(true);
             }
         }
@@ -152,26 +155,7 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
     }
 
     private void setWindowLayoutFromMap(HashMap<String, Object> paramsMap) {
-        Map<String, Object> headersMap = Commons.getMapFromObject(paramsMap, Constants.KEY_HEADER);
-        Map<String, Object> bodyMap = Commons.getMapFromObject(paramsMap, Constants.KEY_BODY);
-        Map<String, Object> footerMap = Commons.getMapFromObject(paramsMap, Constants.KEY_FOOTER);
-        windowMargin = UiBuilder.getInstance().getMargin(mContext, paramsMap.get(Constants.KEY_MARGIN));
-        windowBgColor = Commons.getBgColorFromParams(paramsMap);
-        isDisableClicks = Commons.getIsClicksDisabled(paramsMap);
-        LogUtils.getInstance().i(TAG, String.valueOf(isDisableClicks));
-        windowGravity = (String) paramsMap.get(Constants.KEY_GRAVITY);
         windowUserName = (String) paramsMap.get(Constants.KEY_USERNAME);
-        windowInitials = (String) paramsMap.get(Constants.KEY_INITIALS);
-        windowImageUrl = (String) paramsMap.get(Constants.KEY_IMAGE_URL);
-        windowWidth = NumberUtils.getInt(paramsMap.get(Constants.KEY_WIDTH));
-        windowHeight = NumberUtils.getInt(paramsMap.get(Constants.KEY_HEIGHT));
-        bodyView2 = new BodyView(mContext, bodyMap, windowBgColor, isDisableClicks, windowInitials, windowImageUrl);
-        bodyView = bodyView2.getView();
-        systemAlertWindowPlugin.setBodyView(bodyView2);
-        if (headersMap != null)
-            headerView = new HeaderView(mContext, headersMap, windowBgColor).getView();
-        if (footerMap != null)
-            footerView = new FooterView(mContext, footerMap, windowBgColor).getView();
     }
 
     private WindowManager.LayoutParams getLayoutParams() {
@@ -184,24 +168,13 @@ public class WindowServiceNew extends Service implements View.OnTouchListener {
         params.format = PixelFormat.TRANSLUCENT;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             params.type = android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            // if (isDisableClicks) {
-            // params.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-            // | android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-            // | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-            // } else {
             params.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                     | android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                     | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-            // }
         } else {
             params.type = android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-            // if (isDisableClicks) {
-            // params.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-            // | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-            // } else {
             params.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                     | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-            // }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && isDisableClicks) {
             params.alpha = 0.8f;

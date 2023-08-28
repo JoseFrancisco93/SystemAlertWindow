@@ -23,6 +23,11 @@
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.FOREGROUND_SERVICE"/>
+        <service
+            android:name=".services.WindowServiceNotification"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.FOREGROUND_SERVICE"/>
     </application>
 
 </manifest>

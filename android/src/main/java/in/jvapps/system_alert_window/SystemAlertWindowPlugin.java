@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import in.jvapps.system_alert_window.services.WindowServiceNew;
+import in.jvapps.system_alert_window.services.WindowServiceNotification;
 import in.jvapps.system_alert_window.utils.Commons;
 import in.jvapps.system_alert_window.utils.Constants;
 import in.jvapps.system_alert_window.utils.LogUtils;
@@ -229,6 +230,45 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                     }
                     result.success(true);
                     break;
+                case "showNotification":
+                    assert (call.arguments != null);
+                    arguments = (JSONArray) call.arguments;
+                    String notificationTitle = (String) arguments.get(0);
+                    String notificationBody = (String) arguments.get(1);
+                    JSONObject notificationParamObj = (JSONObject) arguments.get(2);
+                    @SuppressWarnings("unchecked")
+                    HashMap<String, Object> notificationParams = new Gson().fromJson(notificationParamObj.toString(),
+                            HashMap.class);
+                    prefMode = (String) arguments.get(3);
+                    if (prefMode == null) {
+                        prefMode = "default";
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && isBubbleMode(prefMode)) {
+                        if (checkPermission(false)) {
+                            LogUtils.getInstance().d(TAG, "Going to show Bubble");
+                            showBubble(notificationTitle, notificationBody, notificationParams);
+                        } else {
+                            Toast.makeText(mContext, "Please enable bubbles", Toast.LENGTH_LONG).show();
+                            result.success(false);
+                        }
+                    } else {
+                        if (checkPermission(true)) {
+                            LogUtils.getInstance().d(TAG, "Going to show System Alert Window");
+                            final Intent i = new Intent(mContext, WindowServiceNotification.class);
+                            i.putExtra(INTENT_EXTRA_PARAMS_MAP, notificationParams);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            i.putExtra(INTENT_EXTRA_IS_UPDATE_WINDOW, false);
+                            // WindowService.enqueueWork(mContext, i);
+                            mContext.startService(i);
+                        } else {
+                            Toast.makeText(mContext, "Please give draw over other apps permission", Toast.LENGTH_LONG)
+                                    .show();
+                            result.success(false);
+                        }
+                    }
+                    result.success(true);
+                    break;
                 case "updateSystemWindow":
                     assert (call.arguments != null);
                     JSONArray updateArguments = (JSONArray) call.arguments;
@@ -279,6 +319,19 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                             NotificationHelper.getInstance(mContext).dismissNotification();
                         } else {
                             final Intent i = new Intent(mContext, WindowServiceNew.class);
+                            i.putExtra(INTENT_EXTRA_IS_CLOSE_WINDOW, true);
+                            // WindowService.dequeueWork(mContext, i);
+                            mContext.startService(i);
+                        }
+                        result.success(true);
+                    }
+                    break;
+                case "closeNotification":
+                    if (checkPermission(!isBubbleMode("default"))) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && isBubbleMode("default")) {
+                            NotificationHelper.getInstance(mContext).dismissNotification();
+                        } else {
+                            final Intent i = new Intent(mContext, WindowServiceNotification.class);
                             i.putExtra(INTENT_EXTRA_IS_CLOSE_WINDOW, true);
                             // WindowService.dequeueWork(mContext, i);
                             mContext.startService(i);
