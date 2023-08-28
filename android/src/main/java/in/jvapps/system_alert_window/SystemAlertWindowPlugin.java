@@ -6,6 +6,7 @@ import static in.jvapps.system_alert_window.utils.Constants.CHANNEL;
 import static in.jvapps.system_alert_window.utils.Constants.INTENT_EXTRA_PARAMS_MAP;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -243,29 +244,37 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                     if (prefMode == null) {
                         prefMode = "default";
                     }
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && isBubbleMode(prefMode)) {
-                        if (checkPermission(false)) {
-                            LogUtils.getInstance().d(TAG, "Going to show Bubble");
-                            showBubble(notificationTitle, notificationBody, notificationParams);
-                        } else {
-                            Toast.makeText(mContext, "Please enable bubbles", Toast.LENGTH_LONG).show();
-                            result.success(false);
-                        }
-                    } else {
-                        if (checkPermission(true)) {
-                            LogUtils.getInstance().d(TAG, "Going to show System Alert Window");
-                            final Intent i = new Intent(mContext, WindowServiceNotification.class);
-                            i.putExtra(INTENT_EXTRA_PARAMS_MAP, notificationParams);
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            i.putExtra(INTENT_EXTRA_IS_UPDATE_WINDOW, false);
-                            // WindowService.enqueueWork(mContext, i);
-                            mContext.startService(i);
-                        } else {
-                            Toast.makeText(mContext, "Please give draw over other apps permission", Toast.LENGTH_LONG)
-                                    .show();
-                            result.success(false);
-                        }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        // if (checkPermission(false)) {
+                        LogUtils.getInstance().d(TAG, "Going to show System Alert Window");
+                        final Intent i = new Intent(mContext, WindowServiceNotification.class);
+                        i.putExtra(INTENT_EXTRA_PARAMS_MAP, notificationParams);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        i.putExtra(INTENT_EXTRA_IS_UPDATE_WINDOW, false);
+                        // WindowService.enqueueWork(mContext, i);
+                        mContext.startService(i);
+                        // } else {
+                        // Toast.makeText(mContext, "Please enable bubbles", Toast.LENGTH_LONG).show();
+                        // result.success(false);
+                        // }
+                        // } else {
+                        // if (checkPermission(true)) {
+                        // LogUtils.getInstance().d(TAG, "Going to show System Alert Window
+                        // 🚩🚩🚩🚩🚩🚩🚩");
+                        // final Intent i = new Intent(mContext, WindowServiceNotification.class);
+                        // i.putExtra(INTENT_EXTRA_PARAMS_MAP, notificationParams);
+                        // i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        // i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        // i.putExtra(INTENT_EXTRA_IS_UPDATE_WINDOW, false);
+                        // // WindowService.enqueueWork(mContext, i);
+                        // mContext.startService(i);
+                        // // } else {
+                        // Toast.makeText(mContext, "Please give draw over other apps permission",
+                        // Toast.LENGTH_LONG)
+                        // .show();
+                        // result.success(false);
+                        // }
                     }
                     result.success(true);
                     break;
@@ -329,7 +338,11 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                 case "closeNotification":
                     if (checkPermission(!isBubbleMode("default"))) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && isBubbleMode("default")) {
-                            NotificationHelper.getInstance(mContext).dismissNotification();
+                            // NotificationHelper.getInstance(mContext).dismissNotification();
+                            final Intent i = new Intent(mContext, WindowServiceNotification.class);
+                            i.putExtra(INTENT_EXTRA_IS_CLOSE_WINDOW, true);
+                            // WindowService.dequeueWork(mContext, i);
+                            mContext.startService(i);
                         } else {
                             final Intent i = new Intent(mContext, WindowServiceNotification.class);
                             i.putExtra(INTENT_EXTRA_IS_CLOSE_WINDOW, true);
