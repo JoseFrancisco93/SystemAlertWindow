@@ -254,6 +254,7 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                         i.putExtra(INTENT_EXTRA_IS_UPDATE_WINDOW, false);
                         // WindowService.enqueueWork(mContext, i);
                         mContext.startService(i);
+                        result.success(true);
                         // } else {
                         // Toast.makeText(mContext, "Please enable bubbles", Toast.LENGTH_LONG).show();
                         // result.success(false);
@@ -275,6 +276,8 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                         // .show();
                         // result.success(false);
                         // }
+                    } else {
+                        result.success(false);
                     }
                     result.success(true);
                     break;
@@ -333,6 +336,8 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                             mContext.startService(i);
                         }
                         result.success(true);
+                    } else {
+                        result.success(false);
                     }
                     break;
                 case "closeNotification":
@@ -350,6 +355,8 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                             mContext.startService(i);
                         }
                         result.success(true);
+                    } else {
+                        result.success(false);
                     }
                     break;
                 case "registerCallBackHandler":
