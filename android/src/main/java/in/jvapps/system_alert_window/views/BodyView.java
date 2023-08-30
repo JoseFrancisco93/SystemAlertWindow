@@ -59,6 +59,7 @@ public class BodyView {
     private static int audioInfo = 0;
     private static RelativeLayout circleLayout;
     private static ScaleAnimation scaleAnimation;
+    private RelativeLayout columnLayout;
 
     private final SystemAlertWindowPlugin systemAlertWindowPlugin = new SystemAlertWindowPlugin();
 
@@ -152,7 +153,7 @@ public class BodyView {
             systemAlertWindowPlugin.startCallBackHandler(context);
         }
 
-        RelativeLayout columnLayout = new RelativeLayout(context);
+        columnLayout = new RelativeLayout(context);
         columnLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
@@ -264,6 +265,19 @@ public class BodyView {
             systemAlertWindowPlugin.invokeCallBack(context, "onClick", micStatus);
         });
 
+        // closeSystemWindowFromBody
+        RelativeLayout.LayoutParams deleteParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        deleteParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        deleteParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+        ImageView deleteIcon = createDeleteButton();
+        columnLayout.addView(deleteIcon, deleteParams);
+        deleteIcon.setOnClickListener(v -> {
+            systemAlertWindowPlugin.closeSystemWindowFromBody(context);
+        });
+
         return columnLayout;
     }
 
@@ -295,5 +309,22 @@ public class BodyView {
         micIcon.setLayoutParams(params);
 
         return micIcon;
+    }
+
+    private ImageView createDeleteButton() {
+        ImageView expandIcon = new ImageView(context);
+        expandIcon.setImageResource(R.drawable.ic_close);
+        int margin = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                2,
+                context.getResources().getDisplayMetrics());
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, margin, margin, 0);
+        expandIcon.setLayoutParams(params);
+
+        return expandIcon;
     }
 }
