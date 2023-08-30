@@ -396,6 +396,12 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                         && ("bubble".equalsIgnoreCase(prefMode) || Build.VERSION.SDK_INT >= Build.VERSION_CODES.R));
     }
 
+    public void closeSystemWindowFromBody(Context context) {
+        final Intent i = new Intent(context, WindowServiceNew.class);
+        i.putExtra(INTENT_EXTRA_IS_CLOSE_WINDOW, true);
+        context.startService(i);
+    }
+
     public void startCallBackHandler(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREF_SYSTEM_ALERT_WINDOW, 0);
         long callBackHandle = preferences.getLong(Constants.CALLBACK_HANDLE_KEY, -1);
