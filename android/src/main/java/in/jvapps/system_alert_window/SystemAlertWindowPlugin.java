@@ -52,6 +52,8 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.view.FlutterCallbackInformation;
 import in.jvapps.system_alert_window.views.BodyView;
 
+import java.util.Map;
+
 public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, ActivityAware, MethodCallHandler {
 
     private final String flutterEngineId = "system_alert_window_engine";
@@ -65,6 +67,7 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
     private MethodChannel backgroundChannel;
     public int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1237;
     private final String TAG = "SAW:Plugin";
+    private FlutterEngine backgroundEngine;
 
     public SystemAlertWindowPlugin() {
     }
@@ -223,6 +226,7 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                             i.putExtra(INTENT_EXTRA_IS_UPDATE_WINDOW, false);
                             // WindowService.enqueueWork(mContext, i);
                             mContext.startService(i);
+                            startCallBackHandler(mContext);
                         } else {
                             Toast.makeText(mContext, "Please give draw over other apps permission", Toast.LENGTH_LONG)
                                     .show();
@@ -255,27 +259,6 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                         // WindowService.enqueueWork(mContext, i);
                         mContext.startService(i);
                         result.success(true);
-                        // } else {
-                        // Toast.makeText(mContext, "Please enable bubbles", Toast.LENGTH_LONG).show();
-                        // result.success(false);
-                        // }
-                        // } else {
-                        // if (checkPermission(true)) {
-                        // LogUtils.getInstance().d(TAG, "Going to show System Alert Window
-                        // 🚩🚩🚩🚩🚩🚩🚩");
-                        // final Intent i = new Intent(mContext, WindowServiceNotification.class);
-                        // i.putExtra(INTENT_EXTRA_PARAMS_MAP, notificationParams);
-                        // i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        // i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        // i.putExtra(INTENT_EXTRA_IS_UPDATE_WINDOW, false);
-                        // // WindowService.enqueueWork(mContext, i);
-                        // mContext.startService(i);
-                        // // } else {
-                        // Toast.makeText(mContext, "Please give draw over other apps permission",
-                        // Toast.LENGTH_LONG)
-                        // .show();
-                        // result.success(false);
-                        // }
                     } else {
                         result.success(false);
                     }
@@ -335,8 +318,10 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                             // WindowService.dequeueWork(mContext, i);
                             mContext.startService(i);
                         }
+                        removeCallBackHandler();
                         result.success(true);
                     } else {
+                        removeCallBackHandler();
                         result.success(false);
                     }
                     break;
@@ -369,7 +354,7 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                                     .getSharedPreferences(Constants.SHARED_PREF_SYSTEM_ALERT_WINDOW, 0);
                             preferences.edit().putLong(Constants.CALLBACK_HANDLE_KEY, callbackHandle)
                                     .putLong(Constants.CODE_CALLBACK_HANDLE_KEY, onClickHandle).apply();
-                            startCallBackHandler(mContext);
+                            // startCallBackHandler(mContext);
                             result.success(true);
                         } else {
                             LogUtils.getInstance().e(TAG, "Unable to register on click handler. Arguments are null");
@@ -396,10 +381,10 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                         && ("bubble".equalsIgnoreCase(prefMode) || Build.VERSION.SDK_INT >= Build.VERSION_CODES.R));
     }
 
-    public void closeSystemWindowFromBody(Context context) {
-        final Intent i = new Intent(context, WindowServiceNew.class);
+    public void closeSystemWindowFromBody(Context ctx) {
+        final Intent i = new Intent(ctx, WindowServiceNew.class);
         i.putExtra(INTENT_EXTRA_IS_CLOSE_WINDOW, true);
-        context.startService(i);
+        ctx.startService(i);
     }
 
     public void startCallBackHandler(Context context) {
@@ -412,7 +397,7 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                 LogUtils.getInstance().e(TAG, "callback handle not found");
                 return;
             }
-            FlutterEngine backgroundEngine = new FlutterEngine(context);
+            backgroundEngine = new FlutterEngine(context);
             // backgroundEngine.getServiceControlSurface().attachToService(new
             // WindowServiceNew(), null, false);
             backgroundChannel = new MethodChannel(backgroundEngine.getDartExecutor().getBinaryMessenger(),
@@ -421,6 +406,14 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
             DartExecutor.DartCallback dartCallback = new DartExecutor.DartCallback(context.getAssets(),
                     FlutterInjector.instance().flutterLoader().findAppBundlePath(), callback);
             backgroundEngine.getDartExecutor().executeDartCallback(dartCallback);
+        }
+    }
+
+    public void removeCallBackHandler() {
+        if (backgroundEngine != null) {
+            System.out.println("❌❌❌❌❌❌❌❌❌❌❌Eliminando");
+            backgroundEngine.destroy();
+            backgroundEngine = null;
         }
     }
 

@@ -74,6 +74,10 @@ public class BodyView {
         this.imageUrl = imageUrl;
     }
 
+    public Context getContext() {
+        return context;
+    }
+
     public static void getValueInt(int value) {
         audioInfo = value;
         if (circleLayout != null) {
@@ -149,9 +153,9 @@ public class BodyView {
     }
 
     private View createColumn(Map<String, Object> columnMap) {
-        if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
-            systemAlertWindowPlugin.startCallBackHandler(context);
-        }
+        // if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
+        // systemAlertWindowPlugin.startCallBackHandler(context);
+        // }
 
         columnLayout = new RelativeLayout(context);
         columnLayout.setLayoutParams(new LinearLayout.LayoutParams(
@@ -257,9 +261,9 @@ public class BodyView {
             isMuted = !isMuted;
             micIcon.setImageResource(!isMuted ? R.drawable.ic_mic : R.drawable.ic_mic_off);
 
-            if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
-                systemAlertWindowPlugin.startCallBackHandler(context);
-            }
+            // if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
+            // systemAlertWindowPlugin.startCallBackHandler(context);
+            // }
 
             String micStatus = !isMuted ? "micOn" : "micOff";
             systemAlertWindowPlugin.invokeCallBack(context, "onClick", micStatus);
@@ -279,6 +283,14 @@ public class BodyView {
         });
 
         return columnLayout;
+    }
+
+    public void expandWidget() {
+        // if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
+        // systemAlertWindowPlugin.startCallBackHandler(context);
+        // }
+
+        systemAlertWindowPlugin.invokeCallBack(context, "onClick", "expand");
     }
 
     private void openApp() {

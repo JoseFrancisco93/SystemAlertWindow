@@ -32,10 +32,12 @@ public class UiBuilder {
     }
 
     public TextView getTextView(Context context, Map<String, Object> textMap) {
-        if (textMap == null) return null;
+        if (textMap == null)
+            return null;
         TextView textView = new TextView(context);
         textView.setText((String) textMap.get(Constants.KEY_TEXT));
-        textView.setTypeface(textView.getTypeface(), Commons.getFontWeight((String) textMap.get(Constants.KEY_FONT_WEIGHT), Typeface.NORMAL));
+        textView.setTypeface(textView.getTypeface(),
+                Commons.getFontWeight((String) textMap.get(Constants.KEY_FONT_WEIGHT), Typeface.NORMAL));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, NumberUtils.getFloat(textMap.get(Constants.KEY_FONT_SIZE)));
         textView.setTextColor(NumberUtils.getInt(textMap.get(Constants.KEY_TEXT_COLOR)));
         Padding padding = getPadding(context, textMap.get(Constants.KEY_PADDING));
@@ -49,7 +51,8 @@ public class UiBuilder {
         if (paddingMap == null) {
             return new Padding(0, 0, 0, 0, context);
         }
-        return new Padding(paddingMap.get(Constants.KEY_LEFT), paddingMap.get(Constants.KEY_TOP), paddingMap.get(Constants.KEY_RIGHT), paddingMap.get(Constants.KEY_BOTTOM), context);
+        return new Padding(paddingMap.get(Constants.KEY_LEFT), paddingMap.get(Constants.KEY_TOP),
+                paddingMap.get(Constants.KEY_RIGHT), paddingMap.get(Constants.KEY_BOTTOM), context);
     }
 
     public Margin getMargin(Context context, Object object) {
@@ -58,7 +61,8 @@ public class UiBuilder {
         if (marginMap == null) {
             return new Margin(0, 0, 0, 0, context);
         }
-        return new Margin(marginMap.get(Constants.KEY_LEFT), marginMap.get(Constants.KEY_TOP), marginMap.get(Constants.KEY_RIGHT), marginMap.get(Constants.KEY_BOTTOM), context);
+        return new Margin(marginMap.get(Constants.KEY_LEFT), marginMap.get(Constants.KEY_TOP),
+                marginMap.get(Constants.KEY_RIGHT), marginMap.get(Constants.KEY_BOTTOM), context);
     }
 
     public Decoration getDecoration(Context context, Map<String, Object> decorationMap) {
@@ -71,7 +75,8 @@ public class UiBuilder {
     }
 
     public Button getButtonView(Context context, Map<String, Object> buttonMap) {
-        if (buttonMap == null) return null;
+        if (buttonMap == null)
+            return null;
         Button button = new Button(context);
         TextView buttonText = getTextView(context, Commons.getMapFromObject(buttonMap, Constants.KEY_TEXT));
         assert buttonText != null;
@@ -88,7 +93,8 @@ public class UiBuilder {
                 Commons.getPixelsFromDp(context, (int) ((double) buttonMap.get(Constants.KEY_HEIGHT))),
                 1.0f);
         Margin buttonMargin = getMargin(context, buttonMap.get(Constants.KEY_MARGIN));
-        params.setMargins(buttonMargin.getLeft(), buttonMargin.getTop(), buttonMargin.getRight(), Math.min(buttonMargin.getBottom(), 4));
+        params.setMargins(buttonMargin.getLeft(), buttonMargin.getTop(), buttonMargin.getRight(),
+                Math.min(buttonMargin.getBottom(), 4));
         button.setLayoutParams(params);
         Padding padding = getPadding(context, buttonMap.get(Constants.KEY_PADDING));
         button.setPadding(padding.getLeft(), padding.getTop(), padding.getRight(), padding.getBottom());
@@ -97,19 +103,13 @@ public class UiBuilder {
             GradientDrawable gd = getGradientDrawable(decoration);
             button.setBackground(gd);
         }
-        button.setOnClickListener(v -> {
-            if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
-                systemAlertWindowPlugin.startCallBackHandler(context);
-            }
-            systemAlertWindowPlugin.invokeCallBack(context, Constants.CALLBACK_TYPE_ONCLICK, tag);
-        });
         return button;
     }
 
     public GradientDrawable getGradientDrawable(Decoration decoration) {
         GradientDrawable gd = new GradientDrawable();
         if (decoration.isGradient()) {
-            int[] colors = {decoration.getStartColor(), decoration.getEndColor()};
+            int[] colors = { decoration.getStartColor(), decoration.getEndColor() };
             gd.setColors(colors);
             gd.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
         } else {

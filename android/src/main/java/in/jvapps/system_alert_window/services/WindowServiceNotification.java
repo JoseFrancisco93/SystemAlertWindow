@@ -295,12 +295,6 @@ public class WindowServiceNotification extends Service implements View.OnTouchLi
             } else if (action == MotionEvent.ACTION_UP) {
                 long clickDuration = System.currentTimeMillis() - downTime;
                 if (clickDuration <= CLICK_DURATION_THRESHOLD) {
-                    if (systemAlertWindowPlugin != null) {
-                        if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
-                            systemAlertWindowPlugin.startCallBackHandler(mContext);
-                        }
-                        systemAlertWindowPlugin.invokeCallBack(mContext, "onClick", "expand");
-                    }
                     openApp();
                 }
                 return moving;
