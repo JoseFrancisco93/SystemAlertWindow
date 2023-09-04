@@ -67,7 +67,8 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
     private MethodChannel backgroundChannel;
     public int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1237;
     private final String TAG = "SAW:Plugin";
-    private FlutterEngine backgroundEngine;
+    // public FlutterEngine backgroundEngine;
+    private List<FlutterEngine> activeFlutterEngines = new ArrayList<>();
 
     public SystemAlertWindowPlugin() {
     }
@@ -226,7 +227,7 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                             i.putExtra(INTENT_EXTRA_IS_UPDATE_WINDOW, false);
                             // WindowService.enqueueWork(mContext, i);
                             mContext.startService(i);
-                            startCallBackHandler(mContext);
+                            // startCallBackHandler(mContext);
                         } else {
                             Toast.makeText(mContext, "Please give draw over other apps permission", Toast.LENGTH_LONG)
                                     .show();
@@ -318,10 +319,10 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                             // WindowService.dequeueWork(mContext, i);
                             mContext.startService(i);
                         }
-                        removeCallBackHandler();
+                        // removeCallBackHandler();
                         result.success(true);
                     } else {
-                        removeCallBackHandler();
+                        // removeCallBackHandler();
                         result.success(false);
                     }
                     break;
@@ -397,25 +398,26 @@ public class SystemAlertWindowPlugin extends Activity implements FlutterPlugin, 
                 LogUtils.getInstance().e(TAG, "callback handle not found");
                 return;
             }
-            backgroundEngine = new FlutterEngine(context);
-            // backgroundEngine.getServiceControlSurface().attachToService(new
-            // WindowServiceNew(), null, false);
+            FlutterEngine backgroundEngine = new FlutterEngine(context);
+            backgroundEngine.getServiceControlSurface().attachToService(new
+            WindowServiceNew(), null, false);
             backgroundChannel = new MethodChannel(backgroundEngine.getDartExecutor().getBinaryMessenger(),
                     Constants.BACKGROUND_CHANNEL, JSONMethodCodec.INSTANCE);
             sIsIsolateRunning.set(true);
             DartExecutor.DartCallback dartCallback = new DartExecutor.DartCallback(context.getAssets(),
                     FlutterInjector.instance().flutterLoader().findAppBundlePath(), callback);
             backgroundEngine.getDartExecutor().executeDartCallback(dartCallback);
+            // activeFlutterEngines.add(backgroundEngine);
         }
     }
 
-    public void removeCallBackHandler() {
-        if (backgroundEngine != null) {
-            System.out.println("❌❌❌❌❌❌❌❌❌❌❌Eliminando");
-            backgroundEngine.destroy();
-            backgroundEngine = null;
-        }
-    }
+    // public void removeCallBackHandler() {
+    //     if (backgroundEngine != null) {
+    //         System.out.println("❌❌❌❌❌❌❌❌❌❌❌Eliminando");
+    //         backgroundEngine.destroy();
+    //         backgroundEngine = null;
+    //     }
+    // }
 
     public void invokeCallBack(Context context, String type, Object params) {
         List<Object> argumentsList = new ArrayList<>();

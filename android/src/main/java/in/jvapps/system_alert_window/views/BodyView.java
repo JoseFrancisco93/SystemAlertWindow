@@ -153,9 +153,9 @@ public class BodyView {
     }
 
     private View createColumn(Map<String, Object> columnMap) {
-        // if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {
-        // systemAlertWindowPlugin.startCallBackHandler(context);
-        // }
+        if (!systemAlertWindowPlugin.sIsIsolateRunning.get()) {;
+            systemAlertWindowPlugin.startCallBackHandler(context);
+        }
 
         columnLayout = new RelativeLayout(context);
         columnLayout.setLayoutParams(new LinearLayout.LayoutParams(
